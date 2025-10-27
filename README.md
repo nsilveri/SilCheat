@@ -1,94 +1,62 @@
-![Tauri x SvelteKit Banner](/readme_assets/banner.png)
+# SilCheat - Cheat Code Manager
 
-# Tauri x SvelteKit
+![alt text](image/home.png)
 
-1. [Getting Started](#getting-started)
-2. [How it Works](#how-it-works)
-3. [About the Frameworks](#about-the-frameworks)
-4. [Desktop Apps with SvelteKit and Tauri - Step-by-Step Tutorial](#desktop-apps-with-sveltekit-and-tauri---step-by-step-tutorial)
-5. [Extra](#extra)
+SilCheat is a desktop application to manage and organize cheat codes for your favorite games. It lets you import, edit and reorder cheats in a simple and intuitive way.
 
-## Getting Started
+## Main Features
 
-**Install the packages**
+- **CHT File Import**: Easily load `.cht` files that contain cheat codes to populate your tables.
+![alt text](image/add_new_cht_1.png)
+![alt text](image/add_new_cht_2.png)
 
-```shell
-npm install
-```
+- **Table Management**: Create and organize separate tables for each game to keep everything tidy.
+![alt text](image/cht_view.png)
 
-**Specify your application identifier**
+- **Move Cheats**: Select and change the position of a cheat.
+![alt text](image/select_and_move.png)
+![alt text](image/moved_cheat.png)
 
-To build your Tauri app you must specify its identifier in reverse domain name notation (e.g. `com.tauri.my-tauri-app`). This string must be unique across applications and contain only alphanumeric characters (A–Z, a–z, and 0–9), hyphens (-), and periods (.).
+- **View and Edit**: See details for each cheat, edit them or add new ones.
+![alt text](image/cheat_view.png)
 
-Set your application identifier in `src-tauri/tauri.conf.json`:
+- **Single and Bulk Add**: Add a single cheat or use "Magic add" to paste multiple cheats as free text.
+![alt text](image/create_one_new_cheat.png)
+![alt text](image/magic_add_cheat.png)
+![alt text](image/cheat_added_with_magic_cheat.png)
 
-```json
-{
-	"tauri": {
-		"bundle": {
-			"identifier": "com.example.my-tauri-app"
-		}
-	}
-}
-```
+- **Export**: Save your tables as `.cht` files to share or use elsewhere.
+![alt text](image/export_cht.png)
 
-**Run the Tauri app**
+- **Logo Download**: Download logo/boxart from external services (RAWG / TheGamesDB) and set them as the table image.
+![alt text](image/add_image.png)
 
-For development, run the following command:
+- **Localization (i18n)**: UI texts available in Italian and English (`src/lib/i18n/{it.json,en.json}`); the backend returns i18n keys that are translated by the UI.
+![alt text](image/setting_page.png)
 
-```shell
-npm run dev
-```
+---
 
-**Build the Tauri app**
+## Recent changes (changelog)
 
-For building the app into a distributable package, run the following command:
+Below is an extended summary of recent modifications (frontend and backend), test instructions and developer notes.
 
-```shell
-npm run build
-```
+### Key changes
 
-**The initial app should look like this:**
+- Single `Add` button with dropdown: contains `Add one` (single form) and `Magic add` (bulk modal).
+- "Bulk add" modal with smart parsing (`src/routes/home/table/+page.svelte`): supports several pasted formats (labelled pairs `desc:`/`code:`, blank-line separated blocks, single-line `desc code`, or alternating lines). It's designed to simplify fast imports of many cheats.
+- Migration to stable identifiers: lists now use `id` as the Svelte key to avoid duplicate/duplicate DOM elements.
+- Robust drag & drop: integration with SortableJS (handle, fallbackOnBody, ghost/chosen classes) and order saving via `update_record_order` that sends an array of `id`s to the backend.
+- Row selection + header Up/Down controls: select a single row and move it with header arrows; a toast appears if nothing is selected.
+- Per-row Up/Down buttons and actions: each row has actions (View, Edit, Move up/down, Delete).
+- Edit page uses `id`: the edit link and page now look up the record by `id` (no longer by `desc`).
+- Home refresh after import: after importing a `.cht` the table list is reloaded automatically.
+- Logo functionality: frontend `fetchAndSetLogo()` calls the backend which tries to fetch images from RAWG/TheGamesDB and save them for the table.
+- Backend localization → i18n keys: the backend now returns error keys (e.g. `settings.api_key_missing`, `home.no_game_found_rawg`, `table.duplicate_desc`) instead of hard-coded Italian strings. These keys are translated in `src/lib/i18n/it.json` and `src/lib/i18n/en.json`.
 
-![Screenshot of the Tauri app](/readme_assets/application-screenshot.png)
+## Contributing
 
-## How it works
+If you'd like to contribute: open an issue or a PR with a clear description of the feature or bug and, if possible, include reproduction steps. For changes to the bulk parser, include real input examples you want supported.
 
-Tauri can integrate any frontend framework that compiles to HTML, JS and CSS. SvelteKit can be configured to build a static website (compile to HTML, JS and CSS) using the [@sveltejs/adapter-static adapter](https://kit.svelte.dev/docs/adapter-static). This enables us to use Tauri with SvelteKit.
+---
 
-> [!IMPORTANT]  
-> When using SvelteKit as a static site generator, some of it's features like server-side rendering (SSR) and server endpoints are not available. This is because static site generators are designed to generate static websites that can be hosted on a server or a content delivery network (CDN). There is no server involved in the process of serving the website to the user. Instead, the website is pre-built and served as a collection of static files. This limitation is exactly what makes it possible to integrate SvelteKit with Tauri this way.
-
-## About the frameworks
-
-[**Tauri**](https://tauri.app/) is a framework for building tiny, blazing fast binaries for all major desktop platforms. Developers can integrate any frontend framework that compiles to HTML, JS and CSS for building their user interface. Tauri places a great emphasis on [security](https://tauri.app/security/). You can check out how the Tauri architecture works and get a grasp on how the different components integrate [here](https://tauri.app/concept/architecture/).
-
-[**SvelteKit**](https://kit.svelte.dev/) is an application framework powered by Svelte which applies a new approach to building user interfaces. Whereas traditional frameworks like React and Vue do the bulk of their work in the browser, Svelte shifts that work into a compile step that happens when you build your app. Instead of using techniques like virtual DOM diffing, Svelte writes code that surgically updates the DOM when the state of your app changes which results in better performance.
-
-## Desktop Apps with SvelteKit and Tauri - Step-by-Step Tutorial
-
-The [TUTORIAL.md](/TUTORIAL.md) file contains a step-by-step guide on how to manually create a desktop application with Tauri and SvelteKit. It can be a usefull resource when you want to turn your existing SvelteKit project into a desktop app, or when you want to add SvelteKit to your existing Tauri project.
-
-> [!NOTE]  
-> Clone this repository to get the final result of the tutorial.
-
-## Extra
-
-### Removing the Menu Bar
-
-The generated Tauri project contains a menu bar. To remove it, delete the `.menu` parameter from the Tauri builder in `src-tauri/main.rs`:
-
-```rust
-#![cfg_attr(
-  all(not(debug_assertions), target_os = "windows"),
-  windows_subsystem = "windows"
-)]
-
-fn main() {
-  let context = tauri::generate_context!();
-  tauri::Builder::default()
-	// .menu(tauri::Menu::os_default(&context.package_info().name)) <-- remove this line
-	.run(context)
-	.expect("error while running tauri application");
-}
-```
+For questions or support, contact the maintainer.

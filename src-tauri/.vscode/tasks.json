@@ -1,0 +1,11 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Aggiungi rusqlite a src-tauri",
+			"type": "shell",
+			"command": "cargo add rusqlite --features bundled",
+			"group": "build"
+		}
+	]
+}

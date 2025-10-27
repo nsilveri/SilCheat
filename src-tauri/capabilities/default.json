@@ -1,0 +1,20 @@
+{
+  "identifier": "main:default",
+  "description": "Permessi di base per l'app principale",
+  "windows": ["main"],
+  "permissions": [
+    "core:default",
+    "core:window:default",
+    "core:app:default",
+    "core:path:default",
+    "core:event:default",
+    "core:menu:default",
+    "core:tray:default",
+    "core:resources:default",
+    "core:window:allow-set-title",
+    "dialog:default",
+    "dialog:allow-open",
+    "dialog:allow-save",
+    "dialog:allow-message"
+  ]
+}
