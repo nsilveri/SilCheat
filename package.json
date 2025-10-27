@@ -18,6 +18,7 @@
 		"@sveltejs/adapter-static": "^3.0.8",
 		"@sveltejs/kit": "^2.21.2",
 		"@tauri-apps/cli": "^2.0.0",
+		"@types/node": "^24.8.1",
 		"autoprefixer": "^10.4.21",
 		"eslint": "^8.57.1",
 		"eslint-config-prettier": "^8.10.0",
@@ -25,12 +26,22 @@
 		"postcss": "^8.5.4",
 		"prettier": "^3.5.3",
 		"prettier-plugin-svelte": "^3.4.0",
-		"svelte": "^5.33.14",
+		"svelte": "^5.40.2",
 		"svelte-check": "^3.8.6",
 		"svelte-eslint-parser": "^1.2.0",
 		"tailwindcss": "^3.4.17",
 		"typescript": "^5.0.0",
 		"vite": "^6.3.5"
 	},
-	"type": "module"
+	"type": "module",
+	"dependencies": {
+		"@sveltestrap/sveltestrap": "^7.1.0",
+		"@tauri-apps/api": "^2.8.0",
+		"@tauri-apps/plugin-dialog": "^2.4.0",
+		"bootstrap": "^5.3.8",
+		"bootstrap-icons": "^1.13.1",
+		"sortablejs": "^1.15.6",
+		"svelte-i18n": "^4.0.1",
+		"tablesort": "^5.6.0"
+	}
 }

@@ -12,3 +12,15 @@ vite.config.ts.timestamp-*
 # Tauri
 /src-tauri/target
 /src-tauri/gen
+
+data/cheats.db
+
+data/temp_logo_Frue_Lufia__v6_0_.png
+
+data/Frue_Lufia__v6_0_.cht
+
+example.cht
+
+import_cht_to_sqlite.py
+
+scripts/extract-icon.ps1
