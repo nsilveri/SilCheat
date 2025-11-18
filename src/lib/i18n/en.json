@@ -65,7 +65,7 @@
   "magic_add": "Magic add",
   "settings": {
     "title": "Settings",
-    "description": "This is the second example page, with layout similar to home.",
+    "description": "Settings and preferences",
     "api_service": "API service for logos",
     "thegamesdb": "TheGamesDB",
     "rawg": "RAWG",
@@ -112,7 +112,8 @@
     "import": "Import",
     "cancel": "Cancel",
     "success": "Cheats imported: {count}",
-    "error": "Error importing cheats: {err}"
+    "error": "Error importing cheats: {err}",
+    "preview": "Preview"
   }
   ,
   "about": {

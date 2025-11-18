@@ -408,9 +408,33 @@ fn export_cht_to_path(table_name: String, file_path: String) -> Result<String, S
 
     // Get column names (excluding id and image)
     let columns = get_table_columns(table_name.clone())?;
-    let export_columns: Vec<String> = columns.into_iter()
+    let mut export_columns: Vec<String> = columns.into_iter()
         .filter(|col| col != "id" && col != "image")
         .collect();
+
+    // Create a map for original positions
+    let mut column_positions: std::collections::HashMap<String, usize> = std::collections::HashMap::new();
+    for (i, col) in export_columns.iter().enumerate() {
+        column_positions.insert(col.clone(), i);
+    }
+
+    // Sort columns with preferred order: desc, code, enable, then others in table order
+    export_columns.sort_by(|a, b| {
+        let priority = |col: &str| match col {
+            "desc" => 0,
+            "code" => 1,
+            "enable" => 2,
+            _ => 3,
+        };
+        let a_pri = priority(a);
+        let b_pri = priority(b);
+        if a_pri != b_pri {
+            a_pri.cmp(&b_pri)
+        } else {
+            // For same priority, use original order
+            column_positions[a].cmp(&column_positions[b])
+        }
+    });
 
     // Create CHT content
     let mut content = format!("cheats = {}\n\n", records.len());

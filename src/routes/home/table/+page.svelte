@@ -26,6 +26,8 @@
   let showAddMenu = false;
   let addMenuEl = null;
 
+  $: parsedPreview = parseCheats(bulkText);
+
   function initializeSortable() {
   const list = listEl;
   console.log('Initializing sortable list:', list);
@@ -168,6 +170,9 @@ onMount(() => {
     const norm = text.replace(/\r\n/g, '\n').trim();
     const results = [];
 
+    // Split into lines
+    const lines = norm.split('\n').map(l => l.trim()).filter(Boolean);
+
     // Try labeled pairs: desc: ...\ncode: ... (supports multiple blocks)
     const labelRegex = /(?:desc|description)[:\- ]*(.+?)\n(?:code|cheat)[:\- ]*([\s\S]*?)(?=\n(?:desc|description)[:\- ]|\n*$)/igm;
     let m;
@@ -180,43 +185,31 @@ onMount(() => {
     const blocks = norm.split(/\n\s*\n/);
     if (blocks.length > 1) {
       for (const b of blocks) {
-        const lines = b.split('\n').map(l => l.trim()).filter(Boolean);
-        if (lines.length >= 2) {
-          results.push({ desc: lines[0], code: lines.slice(1).join('\n') });
+        const blockLines = b.split('\n').map(l => l.trim()).filter(Boolean);
+        if (blockLines.length >= 2) {
+          results.push({ desc: blockLines[0], code: blockLines.slice(1).join('\n') });
         }
       }
       if (results.length) return results;
     }
 
-    // Heuristic: if every non-empty line looks like "desc <code>" on the same line,
-    // parse each line as a separate cheat by splitting on the last whitespace.
-    // We require the last token to contain a digit (simple code detection) and
-    // to be at least 3 chars long to avoid false positives.
-    const lines = norm.split('\n').map(l => l.trim()).filter(Boolean);
-    if (lines.length > 1) {
-      const allLikelyLinePairs = lines.every(l => {
-        const parts = l.split(/\s+/);
-        const last = parts[parts.length - 1] || '';
-        return last.length >= 3 && /\d/.test(last) && parts.length >= 2;
-      });
-
-      if (allLikelyLinePairs) {
-        for (const l of lines) {
-          const idx = l.lastIndexOf(' ');
-          if (idx === -1) continue;
-          const d = l.slice(0, idx).trim();
-          const c = l.slice(idx + 1).trim();
-          if (d) results.push({ desc: d, code: c });
+    // Heuristic: parse each line as desc + code by splitting on the last space
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (trimmed) {
+        const idx = trimmed.lastIndexOf(' ');
+        if (idx !== -1) {
+          const d = trimmed.slice(0, idx).trim();
+          const c = trimmed.slice(idx + 1).trim();
+          if (d && c) {
+            results.push({ desc: d, code: c });
+          } else {
+            results.push({ desc: trimmed, code: '' });
+          }
+        } else {
+          results.push({ desc: trimmed, code: '' });
         }
-        if (results.length) return results;
       }
-    }
-
-    // Fallback: alternating lines (desc, code, desc, code...)
-    for (let i = 0; i < lines.length; i += 2) {
-      const d = lines[i];
-      const c = lines[i + 1] || '';
-      if (d) results.push({ desc: d, code: c });
     }
 
     return results;
@@ -529,6 +522,21 @@ onMount(() => {
         </div>
         <div class="flex-1 overflow-y-auto p-4">
           <textarea bind:value={bulkText} placeholder={$_('bulk_add.placeholder')} class="w-full h-64 border rounded p-3 text-sm"></textarea>
+          {#if parsedPreview.length > 0}
+            <div class="mt-4">
+              <h3 class="text-sm font-semibold mb-2">{$_('bulk_add.preview')}</h3>
+              <ul class="space-y-1 max-h-32 overflow-y-auto">
+                {#each parsedPreview as cheat, idx}
+                  <li class="text-sm flex flex-wrap gap-1">
+                    <span class="bg-blue-100 px-1 rounded text-xs">Desc:</span>
+                    <span class="bg-blue-200 px-1 rounded flex-1 min-w-0 break-words">{cheat.desc}</span>
+                    <span class="bg-green-100 px-1 rounded text-xs">Code:</span>
+                    <span class="bg-green-200 px-1 rounded flex-1 min-w-0 break-words">{cheat.code}</span>
+                  </li>
+                {/each}
+              </ul>
+            </div>
+          {/if}
         </div>
         <div class="p-4 border-t flex justify-end gap-3">
           <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded" on:click={() => { showBulkModal = false; bulkText = ''; }}>

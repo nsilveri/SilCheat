@@ -65,7 +65,7 @@
   "magic_add": "Aggiunta magica",
   "settings": {
     "title": "Impostazioni",
-    "description": "Questa è la seconda pagina di esempio, con layout simile alla home.",
+    "description": "Impostazioni e preferenze",
     "api_service": "Servizio API per loghi",
     "thegamesdb": "TheGamesDB",
     "rawg": "RAWG",
@@ -112,7 +112,8 @@
     "import": "Importa",
     "cancel": "Annulla",
     "success": "Cheat importati: {count}",
-    "error": "Errore importando cheat: {err}"
+    "error": "Errore importando cheat: {err}",
+    "preview": "Anteprima"
   },
   "about": {
     "title": "Informazioni",
