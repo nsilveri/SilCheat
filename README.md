@@ -3,6 +3,7 @@
 ![alt text](image/home.png)
 
 SilCheat is a desktop application to manage and organize cheat codes for your favorite games. It lets you import, edit and reorder cheats in a simple and intuitive way.
+YouTube: [Link](https://youtu.be/zIEM9aFULQA)
 
 ## Main Features
 
